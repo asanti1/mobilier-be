@@ -1,19 +1,19 @@
-import express, { Application } from "express";
-import db from "../database/config";
-import cors from "cors";
-import furnitureRoutes from "../routes/furnitures.route";
+import express, { Application } from 'express';
+import db from '../database/config';
+import cors from 'cors';
+import furnitureRoutes from '../routes/furnitures.route';
 
 class Server {
   private app: Application;
   private port: string;
   private paths = {
-    furniture: "/api/furniture",
+    furniture: '/api/furniture',
   };
 
   constructor() {
     this.app = express();
 
-    this.port = process.env.PORT || "8080";
+    this.port = process.env.PORT || '8080';
 
     this.connectDB();
     this.middlewares();
@@ -25,13 +25,13 @@ class Server {
 
     this.app.use(express.json());
 
-    this.app.use(express.static("public"));
+    this.app.use(express.static('public'));
   }
 
   async connectDB() {
     try {
       await db();
-      console.log("Database online");
+      console.log('Database online');
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -43,7 +43,7 @@ class Server {
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log("servidor corriendo en puerto " + this.port);
+      console.log('servidor corriendo en puerto ' + this.port);
     });
   }
 }
