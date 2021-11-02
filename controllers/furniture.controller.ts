@@ -1,6 +1,6 @@
 import {} from "mongoose";
 import { Request, Response } from "express";
-import { FurnitureModel } from "../models/Furniture";
+import { FurnitureModel } from "../models/furniture.model";
 
 export const getAllFurnitures = async (req: Request, res: Response) => {
   const furnitures = await FurnitureModel.find();

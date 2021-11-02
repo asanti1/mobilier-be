@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import Furniture from "../interfaces/Furniture";
+import Furniture from "../interfaces/furniture.interface";
 
 const furnitureSchema = new Schema<Furniture>({
   name: { type: String, required: true },

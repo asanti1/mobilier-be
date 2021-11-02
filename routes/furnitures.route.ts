@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { deleteAFurnitureById } from "../controllers/Furniture";
+import { deleteAFurnitureById } from "../controllers/furniture.controller";
 import {
   getAllFurnitures,
   addAFurniture,
   modifyAFurnitureById,
-} from "../controllers/Furniture";
+} from "../controllers/furniture.controller";
 
 const router = Router();
 
