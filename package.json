@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node app.ts",
-    "start:dev": "ts-node-dev --respawn --transpile-only app.ts",
+    "start": "npm run db && ts-node app.ts",
+    "start:dev": "npm run db && ts-node-dev --respawn --transpile-only app.ts",
+    "db": "docker-compose up -d",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "jest"
