@@ -1,6 +1,5 @@
-import {} from "mongoose";
-import { Request, Response } from "express";
-import { FurnitureModel } from "../models/furniture.model";
+import { Request, Response } from 'express';
+import { FurnitureModel } from '../models/furniture.model';
 
 export const getAllFurnitures = async (req: Request, res: Response) => {
   const furnitures = await FurnitureModel.find();
@@ -21,8 +20,8 @@ export const addAFurniture = async (req: Request, res: Response) => {
   });
 
   await furniture.save();
-  console.log("done");
-  res.json({ msg: "OK" });
+  console.log('done');
+  res.json({ msg: 'OK' });
 };
 
 export const modifyAFurnitureById = async (req: Request, res: Response) => {

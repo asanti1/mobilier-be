@@ -1,5 +1,5 @@
-import { model, Schema } from "mongoose";
-import Furniture from "../interfaces/furniture.interface";
+import { model, Schema } from 'mongoose';
+import Furniture from '../interfaces/furniture.interface';
 
 const furnitureSchema = new Schema<Furniture>({
   name: { type: String, required: true },
@@ -11,4 +11,4 @@ const furnitureSchema = new Schema<Furniture>({
   wood: { type: String, required: true },
 });
 
-export const FurnitureModel = model<Furniture>("Furniture", furnitureSchema);
+export const FurnitureModel = model<Furniture>('Furniture', furnitureSchema);
