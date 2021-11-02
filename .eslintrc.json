@@ -4,6 +4,6 @@
   "parserOptions": { "project": ["./tsconfig.json"] },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "quotes": ["warn", "single", { "avoidEscape": true }]
+    "quotes": ["warn", "double", { "avoidEscape": true }]
   }
 }

@@ -6,6 +6,7 @@ interface Furniture {
   heightX: number;
   widthY: number;
   wood: string;
+  stock: number;
 }
 
 export default Furniture;
