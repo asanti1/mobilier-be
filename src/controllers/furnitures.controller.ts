@@ -7,8 +7,7 @@ import {
   getAllFurnitures,
   modifyAFurnitureById,
   getAFurnitureById,
-} from "../controllers/furniture.controller";
-import { furnitureExistsById } from "../helpers/furniture-db-validators.helper";
+} from "../services/furniture.services";
 
 import { fieldsValidator } from "../middlewares/field-validator.middlewares";
 
@@ -42,23 +41,13 @@ router.post(
 
 router.put(
   "/:id",
-  [
-    check("id", "it is not a valid id").isMongoId(),
-    fieldsValidator,
-    check("id").custom(furnitureExistsById),
-    fieldsValidator,
-  ],
+  [check("id", "it is not a valid id").isMongoId(), fieldsValidator],
   modifyAFurnitureById
 );
 
 router.delete(
   "/:id",
-  [
-    check("id", "it is not a valid id").isMongoId(),
-    fieldsValidator,
-    check("id").custom(furnitureExistsById),
-    fieldsValidator,
-  ],
+  [check("id", "it is not a valid id").isMongoId(), fieldsValidator],
   deleteAFurnitureById
 );
 

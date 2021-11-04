@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import db from "./config";
 import cors from "cors";
-import furnitureRoutes from "../routes/furnitures.route";
+import furnitureRoutes from "../controllers/furnitures.controller";
 
 class Server {
   private app: Application;
