@@ -14,8 +14,8 @@ export interface Furniture {
 const furnitureSchema = new Schema<Furniture>({
   name: { type: String, required: true },
   description: { type: String, required: false },
-  cost: { type: Number, required: false, default: 0.0 },
-  stock: { type: Number, required: false, default: 0.0 },
+  cost: { type: Number, required: false, default: 0 },
+  stock: { type: Number, required: false, default: 0 },
   depthZ: { type: Number, required: true },
   heightX: { type: Number, required: true },
   widthY: { type: Number, required: true },

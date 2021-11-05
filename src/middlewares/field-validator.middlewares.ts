@@ -12,3 +12,17 @@ export const fieldsValidator = (
   }
   next();
 };
+
+export const passwordExists = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { password } = req.body;
+  if (password && password.length <= 8)
+    return res
+      .status(400)
+      .json({ msg: "password field must be at least 8 characters long" });
+
+  next();
+};

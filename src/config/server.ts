@@ -2,12 +2,14 @@ import express, { Application } from "express";
 import db from "./config";
 import cors from "cors";
 import furnitureRoutes from "../controllers/furnitures.controller";
+import userRoutes from "../controllers/users.controller";
 
 class Server {
   private app: Application;
   private port: string;
   private paths = {
     furniture: "/api/furniture",
+    user: "/api/user",
   };
 
   constructor() {
@@ -39,6 +41,7 @@ class Server {
 
   routes() {
     this.app.use(this.paths.furniture, furnitureRoutes);
+    this.app.use(this.paths.user, userRoutes);
   }
 
   listen() {
