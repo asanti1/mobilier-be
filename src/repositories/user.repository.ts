@@ -1,4 +1,6 @@
-import { UserModel, User, Address } from "../schemas/user.schema";
+import { Address } from '../interfaces/address.interfaces';
+import { User } from '../interfaces/user.interfaces';
+import { UserModel } from '../schemas/user.schema';
 
 export const getAllUsersRepository = async () => {
   return await UserModel.find();
@@ -32,10 +34,7 @@ export const modifyAUserByIdRepository = async (
   );
 };
 
-export const addAnUserAddressRepository = async (
-  id: string,
-  address: Address
-) => {
+export const addAnUserAddressRepository = async (id: string, address: Address) => {
   return await UserModel.updateOne({ _id: id }, { $push: { address } });
 };
 

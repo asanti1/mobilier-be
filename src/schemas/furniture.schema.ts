@@ -1,19 +1,9 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
+import { IFurniture } from '../interfaces/furniture.intefaces';
 
-export interface Furniture {
-  name: string;
-  description: string;
-  cost: number;
-  stock: number;
-  depthZ: number;
-  heightX: number;
-  widthY: number;
-  wood: string;
-}
-
-const furnitureSchema = new Schema<Furniture>({
+const furnitureSchema = new Schema<IFurniture>({
   name: { type: String, required: true },
-  description: { type: String, required: false },
+  description: { type: String, required: false, default: 'no description' },
   cost: { type: Number, required: false, default: 0 },
   stock: { type: Number, required: false, default: 0 },
   depthZ: { type: Number, required: true },
@@ -22,4 +12,4 @@ const furnitureSchema = new Schema<Furniture>({
   wood: { type: String, required: true },
 });
 
-export const FurnitureModel = model<Furniture>("Furniture", furnitureSchema);
+export const FurnitureModel = model<IFurniture>('Furniture', furnitureSchema);

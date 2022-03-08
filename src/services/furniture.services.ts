@@ -1,14 +1,15 @@
-import { Request, Response } from "express";
-import { FurnitureModel } from "../schemas/furniture.schema";
+import { Request, Response } from 'express';
+import { FurnitureModel } from '../schemas/furniture.schema';
 import {
   addAFurnitureRepository,
   modifyAFurnitureByIdRepository,
   deleteAFurnitureByIdRepository,
   getAFurnitureByIdRepository,
-} from "../repositories/furniture.repository";
+  getAllFurnituresRepository,
+} from '../repositories/furniture.repository';
 
 export const getAllFurnitures = async (req: Request, res: Response) => {
-  const furnitures = await FurnitureModel.find();
+  const furnitures = await getAllFurnituresRepository();
   return res.json(furnitures);
 };
 
@@ -21,27 +22,18 @@ export const getAFurnitureById = async (req: Request, res: Response) => {
 
 export const addAFurniture = async (req: Request, res: Response) => {
   const { name, depthZ, heightX, widthY, wood } = req.body;
-  let { cost, stock, description } = req.body;
-  if (!cost) cost = 0.0;
-  if (!stock) stock = 0;
-  if (!description) description = "no description";
-  const furniture = {
-    name,
-    description,
-    cost,
-    stock,
-    depthZ,
-    heightX,
-    widthY,
-    wood,
-  };
-  await addAFurnitureRepository(furniture)
-    .then((furniture) => {
-      res.json({ msg: "Success", furniture });
+  const { cost, stock, description } = req.body;
+  const x = await FurnitureModel.create({ name, description, cost, stock, depthZ, heightX, widthY, wood });
+  console.log(x);
+
+  return await addAFurnitureRepository(x)
+    .then(furniture => {
+      console.log(furniture);
+      res.json({ msg: 'Success', furniture });
     })
-    .catch((error) => {
+    .catch(error => {
       res.status(500).json({
-        msg: "you are not seeing this, THIS IS A FEATURE, FUCK YOU CUNT",
+        msg: 'you are not seeing this, THIS IS A FEATURE, FUCK YOU CUNT',
         error,
       });
     });

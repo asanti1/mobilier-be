@@ -1,21 +1,23 @@
-import express, { Application } from "express";
-import db from "./config";
-import cors from "cors";
-import furnitureRoutes from "../controllers/furnitures.controller";
-import userRoutes from "../controllers/users.controller";
+import express, { Application } from 'express';
+import db from './config';
+import cors from 'cors';
+import furnitureRoutes from '../controllers/furnitures.controller';
+import userRoutes from '../controllers/users.controller';
+import saleRoutes from '../controllers/sales.controller';
 
 class Server {
   private app: Application;
   private port: string;
   private paths = {
-    furniture: "/api/furniture",
-    user: "/api/user",
+    furniture: '/api/furniture',
+    user: '/api/user',
+    sale: '/api/sale',
   };
 
   constructor() {
     this.app = express();
 
-    this.port = process.env.PORT || "8080";
+    this.port = process.env.PORT || '8080';
 
     this.connectDB();
     this.middlewares();
@@ -27,13 +29,13 @@ class Server {
 
     this.app.use(express.json());
 
-    this.app.use(express.static("public"));
+    this.app.use(express.static('public'));
   }
 
   async connectDB() {
     try {
       await db();
-      console.log("Database online");
+      console.log('Database online');
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -42,11 +44,12 @@ class Server {
   routes() {
     this.app.use(this.paths.furniture, furnitureRoutes);
     this.app.use(this.paths.user, userRoutes);
+    this.app.use(this.paths.sale, saleRoutes);
   }
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log("server running at port:  " + this.port);
+      console.log('server running at port:  ' + this.port);
     });
   }
 }

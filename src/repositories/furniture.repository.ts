@@ -1,26 +1,29 @@
-import { FurnitureModel, Furniture } from "../schemas/furniture.schema";
+import { FurnitureModel } from '../schemas/furniture.schema';
+import { Document } from 'mongoose';
 
-export const getAllFurnituresRepository = async () => {
+export async function getAllFurnituresRepository() {
   return await FurnitureModel.find();
-};
+}
 
-export const getAFurnitureByIdRepository = async (id: string) => {
+export async function getAFurnitureByIdRepository(id: string) {
   return await FurnitureModel.findById(id);
-};
+}
 
-export const addAFurnitureRepository = async (furniture: Furniture) => {
-  const x = new FurnitureModel(furniture);
-  return await x.save();
-};
+export async function addAFurnitureRepository(furniture: Document) {
+  return await furniture
+    .save()
+    .then(document => {
+      return document;
+    })
+    .catch(error => {
+      throw new Error(error);
+    });
+}
 
-export const modifyAFurnitureByIdRepository = async (
-  id: string,
-  cost: number,
-  stock: number
-) => {
+export async function modifyAFurnitureByIdRepository(id: string, cost: number, stock: number) {
   return await FurnitureModel.findByIdAndUpdate(id, { cost, stock });
-};
+}
 
-export const deleteAFurnitureByIdRepository = async (id: string) => {
+export async function deleteAFurnitureByIdRepository(id: string) {
   return await FurnitureModel.findByIdAndRemove(id);
-};
+}

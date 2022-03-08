@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import {
   getAllUsersRepository,
   getAUserByIdRepository,
@@ -6,7 +6,7 @@ import {
   modifyAUserByIdRepository,
   deleteAUserByIdRepository,
   addAnUserAddressRepository,
-} from "../repositories/user.repository";
+} from '../repositories/user.repository';
 
 export const getAllUsers = async (req: Request, res: Response) => {
   const users = await getAllUsersRepository();
@@ -37,12 +37,12 @@ export const addAUser = async (req: Request, res: Response) => {
     phone,
     address: [{ country, state, street, city, roomNumber }],
   })
-    .then((user) => {
-      res.json({ msg: "Success", user });
+    .then(user => {
+      res.json({ msg: 'Success', user });
     })
-    .catch((error) => {
+    .catch(error => {
       res.status(500).json({
-        msg: "you are not seeing this, THIS IS A FEATURE, FUCK YOU CUNT",
+        msg: 'you are not seeing this, THIS IS A FEATURE, FUCK YOU CUNT',
         error,
       });
     });
@@ -57,7 +57,7 @@ export const addAnUserAddress = async (req: Request, res: Response) => {
     street,
     city,
     roomNumber,
-  }).then((response) => {
+  }).then(response => {
     res.json(response);
   });
 };
@@ -65,13 +65,7 @@ export const addAnUserAddress = async (req: Request, res: Response) => {
 export const modifyAUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { firstName, lastName, password, phone } = req.body;
-  const user = await modifyAUserByIdRepository(
-    id,
-    firstName,
-    lastName,
-    password,
-    phone
-  );
+  const user = await modifyAUserByIdRepository(id, firstName, lastName, password, phone);
   if (!user) return idNotFoundExc(id, res);
   return res.json(user);
 };
