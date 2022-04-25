@@ -1,21 +1,30 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { check } from 'express-validator';
+import { HttpStatus } from '../enums/httpStatus.enum';
 
-import {
-  addAFurniture,
-  deleteAFurnitureById,
-  getAllFurnitures,
-  modifyAFurnitureById,
-  getAFurnitureById,
-} from '../services/furniture.services';
-
+import { Furniture } from '../interfaces/furniture.intefaces';
 import { fieldsValidator } from '../middlewares/field-validator.middlewares';
+import { FurnitureService } from '../services/furniture.services';
 
 const router = Router();
 
-router.get('/', getAllFurnitures);
 
-router.get('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsValidator], getAFurnitureById);
+router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+  const service = FurnitureService.getInstance();
+  const furnitures = await service.getAllFurnitures();
+  res.status(HttpStatus.OK).json({ furnitures: furnitures });
+});
+
+router.get('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsValidator], async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const service = FurnitureService.getInstance();
+  try {
+    const furniture = await service.getAFurnitureById(id);
+    res.status(HttpStatus.OK).json({ furniture });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post(
   '/',
@@ -30,11 +39,42 @@ router.post(
     check('wood', 'The furniture must be specified with a wood type').not().isEmpty(),
     fieldsValidator,
   ],
-  addAFurniture
+  async (req: Request, res: Response, next: NextFunction) => {
+    const service = FurnitureService.getInstance();
+    const { name, depthZ, heightX, widthY, wood, cost, stock, description } = req.body;
+    const furniture: Furniture = { name, depthZ, heightX, widthY, wood, cost, stock, description };
+    try {
+      const addedFurniture = await service.addAFurniture(furniture);
+      res.status(HttpStatus.CREATED).json({ addedFurniture });
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
-router.put('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsValidator], modifyAFurnitureById);
+router.put('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsValidator], async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const { cost, stock } = req.body;
 
-router.delete('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsValidator], deleteAFurnitureById);
+  try {
+    const service = FurnitureService.getInstance();
+    const modifiedFurniture = await service.modifyAFurnitureById(id, cost, stock);
+    res.status(HttpStatus.OK).json({ modifiedFurniture });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsValidator],
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const service = FurnitureService.getInstance();
+    try {
+      const deletedFurniture = await service.deleteAFurnitureById(id);
+      res.status(HttpStatus.NO_CONTENT).send('');
+    } catch (error) {
+      next(error);
+    }
+  });
 
 export default router;

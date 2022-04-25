@@ -1,13 +1,15 @@
-import { Schema, model } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
+
 import { Sale } from '../interfaces/sale.interfaces';
-import { FurnitureModel } from '../schemas/furniture.schema';
 
 const saleSchema = new Schema<Sale>(
   {
     customer: { type: String, required: true },
-    shopList: [{ FurnitureModel, quantity: Number, required: true }],
+    shopList: [{ itemId: String, quantity: Number }],
   },
   { timestamps: true }
 );
 
-export const SaleModel = model<Sale>('User', saleSchema);
+export type SaleDocument = Document & Sale;
+
+export const SaleModel = model<SaleDocument>('Sale', saleSchema);

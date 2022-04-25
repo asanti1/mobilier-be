@@ -8,11 +8,16 @@
       "type": "pwa-node",
       "request": "launch",
       "name": "Debug Play.ts",
-      "runtimeArgs": ["-r", "/absolute-path-to-project/node_modules/ts-node/register"],
+      "runtimeArgs": [
+        "-r",
+        "/absolute-path-to-project/node_modules/ts-node/register"
+      ],
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/backend/tsconfig.debug.json"
       },
-      "args": ["${workspaceFolder}/backend/play2.ts"]
+      "args": [
+        "${workspaceFolder}/backend/play2.ts"
+      ]
     }
   ]
 }

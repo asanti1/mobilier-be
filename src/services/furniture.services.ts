@@ -1,59 +1,37 @@
-import { Request, Response } from 'express';
-import { FurnitureModel } from '../schemas/furniture.schema';
-import {
-  addAFurnitureRepository,
-  modifyAFurnitureByIdRepository,
-  deleteAFurnitureByIdRepository,
-  getAFurnitureByIdRepository,
-  getAllFurnituresRepository,
-} from '../repositories/furniture.repository';
+import { Furniture } from '../interfaces/furniture.intefaces';
+import { FurnitureRepository } from '../repositories/furniture.repository';
 
-export const getAllFurnitures = async (req: Request, res: Response) => {
-  const furnitures = await getAllFurnituresRepository();
-  return res.json(furnitures);
-};
+export class FurnitureService {
+  private static instance: FurnitureService;
+  private repository: FurnitureRepository;
 
-export const getAFurnitureById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const furniture = await getAFurnitureByIdRepository(id);
-  if (!furniture) return idNotFoundExc(id, res);
-  return res.json(furniture);
-};
+  constructor() {
+    this.repository = FurnitureRepository.getInstance();
+  }
 
-export const addAFurniture = async (req: Request, res: Response) => {
-  const { name, depthZ, heightX, widthY, wood } = req.body;
-  const { cost, stock, description } = req.body;
-  const x = await FurnitureModel.create({ name, description, cost, stock, depthZ, heightX, widthY, wood });
-  console.log(x);
+  public static getInstance(): FurnitureService {
+    if (!FurnitureService.instance) {
+      FurnitureService.instance = new FurnitureService();
+    }
+    return FurnitureService.instance;
+  }
 
-  return await addAFurnitureRepository(x)
-    .then(furniture => {
-      console.log(furniture);
-      res.json({ msg: 'Success', furniture });
-    })
-    .catch(error => {
-      res.status(500).json({
-        msg: 'you are not seeing this, THIS IS A FEATURE, FUCK YOU CUNT',
-        error,
-      });
-    });
-};
+  getAllFurnitures() {
+    return this.repository.getAllFurnitures();
+  }
 
-export const modifyAFurnitureById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { cost, stock } = req.body;
-  const furniture = await modifyAFurnitureByIdRepository(id, cost, stock);
-  if (!furniture) return idNotFoundExc(id, res);
-  return res.json(furniture);
-};
+  getAFurnitureById(id: string) {
+    return this.repository.getAFurnitureById(id);
+  }
 
-export const deleteAFurnitureById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const deletedFurniture = await deleteAFurnitureByIdRepository(id);
-  if (!deletedFurniture) return idNotFoundExc(id, res);
-  return res.json({ deletedFurniture });
-};
+  addAFurniture(furniture: Furniture) {
+    return this.repository.addAFurniture(furniture);
+  }
 
-const idNotFoundExc = (id: string, res: Response) => {
-  return res.status(404).json(`Id ${id} not found in database`);
-};
+  modifyAFurnitureById(id: string, cost: number, stock: number) {
+    return this.repository.modifyAFurnitureById(id, cost, stock);
+  }
+  deleteAFurnitureById(id: string) {
+    return this.repository.deleteAFurnitureById(id);
+  }
+}

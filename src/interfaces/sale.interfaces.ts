@@ -1,7 +1,5 @@
-import { IFurniture } from './furniture.intefaces';
-
 export interface Sale {
   customer: string;
-  shopList: [{ item: IFurniture; quantity: number }];
+  shopList: [{ itemId: string; quantity: number }];
   date: number;
 }

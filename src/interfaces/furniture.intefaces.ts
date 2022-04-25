@@ -1,4 +1,4 @@
-export interface IFurniture {
+export interface Furniture {
   name: string;
   description: string;
   cost: number;

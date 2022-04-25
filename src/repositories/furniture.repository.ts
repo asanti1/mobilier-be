@@ -1,29 +1,41 @@
+import { IdNotFoundExc } from '../exceptions/idNotFound.exception';
+import { Furniture } from '../interfaces/furniture.intefaces';
 import { FurnitureModel } from '../schemas/furniture.schema';
-import { Document } from 'mongoose';
 
-export async function getAllFurnituresRepository() {
-  return await FurnitureModel.find();
-}
+export class FurnitureRepository {
+  private static instance: FurnitureRepository;
 
-export async function getAFurnitureByIdRepository(id: string) {
-  return await FurnitureModel.findById(id);
-}
+  public static getInstance(): FurnitureRepository {
+    if (!FurnitureRepository.instance) {
+      FurnitureRepository.instance = new FurnitureRepository();
+    }
+    return FurnitureRepository.instance;
+  }
 
-export async function addAFurnitureRepository(furniture: Document) {
-  return await furniture
-    .save()
-    .then(document => {
-      return document;
-    })
-    .catch(error => {
-      throw new Error(error);
-    });
-}
+  async getAFurnitureById(id: string) {
+    const furniture = await FurnitureModel.findById(id);
+    if (!furniture) throw new IdNotFoundExc(`id ${id} was not found in DB`);
+    return furniture;
+  }
 
-export async function modifyAFurnitureByIdRepository(id: string, cost: number, stock: number) {
-  return await FurnitureModel.findByIdAndUpdate(id, { cost, stock });
-}
+  getAllFurnitures() {
+    return FurnitureModel.find();
+  }
 
-export async function deleteAFurnitureByIdRepository(id: string) {
-  return await FurnitureModel.findByIdAndRemove(id);
+  addAFurniture(furniture: Furniture) {
+    return FurnitureModel.create(furniture);
+  }
+
+  async modifyAFurnitureById(id: string, cost: number, stock: number) {
+    const furniture = await FurnitureModel.findById(id);
+    if (!furniture) throw new IdNotFoundExc(`user with the id: ${id} was not found in DB`);
+    return FurnitureModel.findByIdAndUpdate(id, { cost, stock });
+    ;
+  }
+
+  async deleteAFurnitureById(id: string) {
+    const deletedFurniture = await FurnitureModel.findByIdAndRemove(id);
+    if (!deletedFurniture) throw new IdNotFoundExc(`furniture with the id: ${id} not found`);
+    return deletedFurniture;
+  }
 }

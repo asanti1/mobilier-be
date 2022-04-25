@@ -1,5 +1,5 @@
-import { connect } from 'mongoose';
-import 'dotenv/config';
+import { connect } from "mongoose";
+import "dotenv/config";
 
 const db = async () => {
   try {
@@ -7,10 +7,10 @@ const db = async () => {
       autoIndex: true,
     });
 
-    console.log('Base de datos online');
+    console.log("Base de datos online");
   } catch (error) {
     console.log(error);
-    throw new Error('Error a la hora de iniciar la base de datos');
+    throw new Error("Error a la hora de iniciar la base de datos");
   }
 };
 

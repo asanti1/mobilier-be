@@ -1,27 +1,30 @@
-import express, { Application } from 'express';
-import db from './config';
-import cors from 'cors';
-import furnitureRoutes from '../controllers/furnitures.controller';
-import userRoutes from '../controllers/users.controller';
-import saleRoutes from '../controllers/sales.controller';
+import cors from "cors";
+import express, { Application } from "express";
+
+import furnitureRoutes from "../controllers/furnitures.controller";
+import saleRoutes from "../controllers/sales.controller";
+import userRoutes from "../controllers/users.controller";
+import { errorHandlerMiddleware } from "../middlewares/errorHandler.middlewares";
+import db from "./config";
 
 class Server {
   private app: Application;
   private port: string;
   private paths = {
-    furniture: '/api/furniture',
-    user: '/api/user',
-    sale: '/api/sale',
+    furniture: "/api/furniture",
+    user: "/api/user",
+    sale: "/api/sale",
   };
 
   constructor() {
     this.app = express();
 
-    this.port = process.env.PORT || '8080';
+    this.port = process.env.PORT || "8080";
 
     this.connectDB();
     this.middlewares();
     this.routes();
+    this.errorHandler();
   }
 
   middlewares() {
@@ -29,13 +32,17 @@ class Server {
 
     this.app.use(express.json());
 
-    this.app.use(express.static('public'));
+    this.app.use(express.static("public"));
+  }
+
+  errorHandler() {
+    errorHandlerMiddleware(this.app);
   }
 
   async connectDB() {
     try {
       await db();
-      console.log('Database online');
+      console.log("Database online");
     } catch (error) {
       throw new Error(`${error}`);
     }
@@ -49,7 +56,7 @@ class Server {
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log('server running at port:  ' + this.port);
+      console.log("server running at port:  " + this.port);
     });
   }
 }

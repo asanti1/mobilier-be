@@ -1,42 +1,49 @@
-import { Document } from 'mongoose';
-import { IFurniture } from '../interfaces/furniture.intefaces';
+import { startSession } from 'mongoose';
+
+import { InsufficientStockException } from '../exceptions/insufficientStock.exception';
+import { ItemNotFoundException } from '../exceptions/itemNotFound.exceptions';
 import { Item } from '../interfaces/item.interfaces';
 import { FurnitureModel } from '../schemas/furniture.schema';
+import { SaleDocument, SaleModel } from '../schemas/sale.schema';
 
-export const addASaleRepository = async (customerId: string, items: Item[]) => {
-  const ids: string[] = [];
+export class SalesRepository {
+  private static instance: SalesRepository;
 
-  items.forEach(item => ids.push(item._id));
-
-  const affectedFurnituresFromDB = await FurnitureModel.find({ _id: { $in: ids } });
-
-  const furnituresWithPositiveStock: Document<any, any, IFurniture>[] = [];
-  affectedFurnituresFromDB.forEach((furniture, index) => {
-    if (furniture._id === items[index]._id && furniture.stock - items[index].quantity >= 0) {
-      // furniture.stock -= items[index].quantity;
-      items[index].quantity = furniture.stock - items[index].quantity;
-      furnituresWithPositiveStock.push(furniture);
+  public static getInstance(): SalesRepository {
+    if (!SalesRepository.instance) {
+      SalesRepository.instance = new SalesRepository();
     }
-  });
 
-  if (furnituresWithPositiveStock.length === affectedFurnituresFromDB.length) {
-    return await FurnitureModel.updateMany({ _id: furnituresWithPositiveStock. }, { stock: items.$.quantity });
-  } else {
-    console.log('failed');
+    return SalesRepository.instance;
   }
-  /*  
-  ORIGINAL
-  const furnituresWithPositiveStock: Document<any, any, IFurniture>[] = [];
-  affectedFurnituresFromDB.forEach((furniture, index) => {
-    if (furniture.id === items[index].id && furniture.stock - items[index].quantity >= 0) {
-      furniture.stock -= items[index].quantity;
-      furnituresWithPositiveStock.push(furniture);
-    }
-  });
 
-  if (furnituresWithPositiveStock.length === affectedFurnituresFromDB.length) {
-    return await FurnitureModel.updateMany({ _id: { $in: furnituresWithPositiveStock } });
-  } else {
-    console.log('failed');
-  } */
-};
+  async newSale(userID: string, shopList: Item[]): Promise<SaleDocument> {
+    const session = await startSession();
+
+    await session.withTransaction(async () => {
+      await Promise.all(
+        shopList.map(async ({ _id, quantity }) => {
+          const item = await FurnitureModel.findById(_id, {
+            name: 1,
+            stock: 1,
+          });
+          if (!item) throw new ItemNotFoundException(`The item with the id: ${_id} was not found`);
+
+          if (item.stock < quantity)
+            throw new InsufficientStockException(`Insufficient stock for ${item.name}, id: ${_id}`);
+
+          item.stock -= quantity;
+
+          await item.save();
+        })
+      );
+    });
+
+    await session.endSession();
+
+    return await SaleModel.create({
+      customer: userID,
+      shopList: shopList,
+    });
+  }
+}
