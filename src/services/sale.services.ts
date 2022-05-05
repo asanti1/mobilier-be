@@ -1,13 +1,13 @@
 import { Item } from '../interfaces/item.interfaces';
-import { SalesRepository } from '../repositories/sale.repository';
+import { SaleRepository } from '../repositories/sale.repository';
 import { SaleDocument } from '../schemas/sale.schema';
 
 export class SalesService {
   private static instance: SalesService;
-  private repository: SalesRepository;
+  private repository: SaleRepository;
 
   constructor() {
-    this.repository = SalesRepository.getInstance()
+    this.repository = SaleRepository.getInstance()
   }
 
   public static getInstance(): SalesService {

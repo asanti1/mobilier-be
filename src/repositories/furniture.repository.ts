@@ -1,6 +1,6 @@
-import { IdNotFoundExc } from '../exceptions/idNotFound.exception';
+import { IdNotFoundException } from '../exceptions/idNotFound.exception';
 import { Furniture } from '../interfaces/furniture.intefaces';
-import { FurnitureModel } from '../schemas/furniture.schema';
+import { FurnitureDocument, FurnitureModel } from '../schemas/furniture.schema';
 
 export class FurnitureRepository {
   private static instance: FurnitureRepository;
@@ -12,30 +12,29 @@ export class FurnitureRepository {
     return FurnitureRepository.instance;
   }
 
-  async getAFurnitureById(id: string) {
-    const furniture = await FurnitureModel.findById(id);
-    if (!furniture) throw new IdNotFoundExc(`id ${id} was not found in DB`);
-    return furniture;
-  }
-
   getAllFurnitures() {
     return FurnitureModel.find();
   }
+  async getAFurnitureById(id: string): Promise<FurnitureDocument> {
+    const furniture = await FurnitureModel.findById(id);
+    if (!furniture) throw new IdNotFoundException(`id ${id} was not found in DB`);
+    return furniture;
+  }
 
-  addAFurniture(furniture: Furniture) {
+  addAFurniture(furniture: Furniture): Promise<FurnitureDocument> {
     return FurnitureModel.create(furniture);
   }
 
   async modifyAFurnitureById(id: string, cost: number, stock: number) {
     const furniture = await FurnitureModel.findById(id);
-    if (!furniture) throw new IdNotFoundExc(`user with the id: ${id} was not found in DB`);
+    if (!furniture) throw new IdNotFoundException(`user with the id: ${id} was not found in DB`);
     return FurnitureModel.findByIdAndUpdate(id, { cost, stock });
     ;
   }
 
   async deleteAFurnitureById(id: string) {
     const deletedFurniture = await FurnitureModel.findByIdAndRemove(id);
-    if (!deletedFurniture) throw new IdNotFoundExc(`furniture with the id: ${id} not found`);
+    if (!deletedFurniture) throw new IdNotFoundException(`furniture with the id: ${id} not found`);
     return deletedFurniture;
   }
 }

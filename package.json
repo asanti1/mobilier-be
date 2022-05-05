@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "jest -c ./jest.unit.json",
-    "test:watch": "jest -c ./jest.unit.json --watch",
+    "test:watch": "jest -c ./jest.unit.json --watch --colors",
     "test:coverage": "jest --coverage -c ./jest.unit.json"
   },
   "keywords": [],

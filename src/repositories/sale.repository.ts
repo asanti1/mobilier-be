@@ -6,15 +6,14 @@ import { Item } from '../interfaces/item.interfaces';
 import { FurnitureModel } from '../schemas/furniture.schema';
 import { SaleDocument, SaleModel } from '../schemas/sale.schema';
 
-export class SalesRepository {
-  private static instance: SalesRepository;
+export class SaleRepository {
+  private static instance: SaleRepository;
 
-  public static getInstance(): SalesRepository {
-    if (!SalesRepository.instance) {
-      SalesRepository.instance = new SalesRepository();
+  public static getInstance(): SaleRepository {
+    if (!SaleRepository.instance) {
+      SaleRepository.instance = new SaleRepository();
     }
-
-    return SalesRepository.instance;
+    return SaleRepository.instance;
   }
 
   async newSale(userID: string, shopList: Item[]): Promise<SaleDocument> {

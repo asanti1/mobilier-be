@@ -7,7 +7,6 @@ import { User } from '../interfaces/user.interfaces';
 import { fieldsValidator, passwordExists } from '../middlewares/field-validator.middlewares';
 import { UserService } from '../services/user.services';
 
-// async (req: Request, res: Response, next: NextFunction) => {
 const router = Router();
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
