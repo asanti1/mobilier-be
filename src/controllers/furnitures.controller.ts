@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { check } from 'express-validator';
-import { HttpStatus } from '../enums/httpStatus.enum';
 
+import { HttpStatus } from '../enums/httpStatus.enum';
 import { Furniture } from '../interfaces/furniture.intefaces';
+import { Pagination } from '../interfaces/pagination.interfaces';
+
 import { fieldsValidator } from '../middlewares/field-validator.middlewares';
 import { FurnitureService } from '../services/furniture.services';
 
@@ -10,14 +12,19 @@ const router = Router();
 
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+  const pagination: Pagination = { page: Number(req.query.page as string) || 0, size: Number(req.query.size as string) || 5 };
+  const sorting = req.query.sort_by as string || "+name";
   const service = FurnitureService.getInstance();
-  const furnitures = await service.getAllFurnitures();
-  res.status(HttpStatus.OK).json({ furnitures: furnitures });
+
+  const furnitures = await service.getAllFurnitures(pagination, sorting);
+
+  res.status(HttpStatus.OK).json({ page: pagination.page, size: pagination.size, data: furnitures });
 });
 
 router.get('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsValidator], async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const service = FurnitureService.getInstance();
+  
   try {
     const furniture = await service.getAFurnitureById(id);
     res.status(HttpStatus.OK).json({ furniture });
@@ -43,6 +50,7 @@ router.post(
     const service = FurnitureService.getInstance();
     const { name, depthZ, heightX, widthY, wood, cost, stock, description } = req.body;
     const furniture: Furniture = { name, depthZ, heightX, widthY, wood, cost, stock, description };
+
     try {
       const addedFurniture = await service.addAFurniture(furniture);
       res.status(HttpStatus.CREATED).json({ addedFurniture });
@@ -69,6 +77,7 @@ router.delete('/:id', [check('id', 'it is not a valid id').isMongoId(), fieldsVa
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const service = FurnitureService.getInstance();
+
     try {
       const deletedFurniture = await service.deleteAFurnitureById(id);
       res.status(HttpStatus.NO_CONTENT).send('');

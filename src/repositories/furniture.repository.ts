@@ -1,5 +1,6 @@
 import { IdNotFoundException } from '../exceptions/idNotFound.exception';
 import { Furniture } from '../interfaces/furniture.intefaces';
+import { Pagination } from '../interfaces/pagination.interfaces';
 import { FurnitureDocument, FurnitureModel } from '../schemas/furniture.schema';
 
 export class FurnitureRepository {
@@ -12,9 +13,10 @@ export class FurnitureRepository {
     return FurnitureRepository.instance;
   }
 
-  getAllFurnitures() {
-    return FurnitureModel.find();
+  getAllFurnitures(pagination: Pagination, sorting: string) {
+    return FurnitureModel.find().skip(pagination.page * pagination.size).limit(pagination.size).sort(sorting);
   }
+
   async getAFurnitureById(id: string): Promise<FurnitureDocument> {
     const furniture = await FurnitureModel.findById(id);
     if (!furniture) throw new IdNotFoundException(`id ${id} was not found in DB`);

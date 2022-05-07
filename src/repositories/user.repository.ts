@@ -1,5 +1,6 @@
 import { IdNotFoundException } from '../exceptions/idNotFound.exception';
 import { Address } from '../interfaces/address.interfaces';
+import { Pagination } from '../interfaces/pagination.interfaces';
 import { User } from '../interfaces/user.interfaces';
 import { UserModel } from '../schemas/user.schema';
 
@@ -13,8 +14,8 @@ export class UserRepository {
     return UserRepository.instance;
   }
 
-  getAllUsers() {
-    return UserModel.find();
+  getAllUsers(pagination: Pagination, sorting: string) {
+    return UserModel.find().skip(pagination.page * pagination.size).limit(pagination.size).sort(sorting);
   };
 
   async getUserById(id: string) {

@@ -1,4 +1,5 @@
 import { Address } from '../interfaces/address.interfaces';
+import { Pagination } from '../interfaces/pagination.interfaces';
 import { User } from '../interfaces/user.interfaces';
 import { UserRepository } from '../repositories/user.repository';
 export class UserService {
@@ -16,8 +17,8 @@ export class UserService {
     return UserService.instance;
   }
 
-  getAllUsers() {
-    return this.repository.getAllUsers();
+  getAllUsers(pagination: Pagination, sorting: string) {
+    return this.repository.getAllUsers(pagination, sorting);
   };
 
   getAUserById(id: string) {

@@ -1,4 +1,5 @@
 import { Furniture } from '../interfaces/furniture.intefaces';
+import { Pagination } from '../interfaces/pagination.interfaces';
 import { FurnitureRepository } from '../repositories/furniture.repository';
 
 export class FurnitureService {
@@ -16,8 +17,8 @@ export class FurnitureService {
     return FurnitureService.instance;
   }
 
-  getAllFurnitures() {
-    return this.repository.getAllFurnitures();
+  getAllFurnitures(pagination: Pagination, sorting: string) {
+    return this.repository.getAllFurnitures(pagination, sorting);
   }
 
   getAFurnitureById(id: string) {
