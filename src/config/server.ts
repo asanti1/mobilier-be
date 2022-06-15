@@ -1,11 +1,11 @@
-import cors from "cors";
-import express, { Application } from "express";
+import cors from 'cors';
+import express, { Application } from 'express';
 
-import furnitureRoutes from "../controllers/furnitures.controller";
-import saleRoutes from "../controllers/sales.controller";
-import userRoutes from "../controllers/users.controller";
-import { errorHandlerMiddleware } from "../middlewares/errorHandler.middlewares";
-import db from "./config";
+import furnitureRoutes from '../furniture/controller/furnitures.controller';
+import { errorHandlerMiddleware } from '../middlewares/errorHandler.middlewares';
+import saleRoutes from '../sale/controller/sales.controller';
+import userRoutes from '../user/controller/users.controller';
+import db from './config';
 
 class Server {
   private app: Application;
